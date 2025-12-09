@@ -58,10 +58,18 @@ def main():
                 md5_file = calc_md5(targetfile)
                 md5_pack = calc_md5(targetpack) if os.path.exists(targetpack) else '0'  # If .wptp file exists, calculate its MD5, else return '0'
 
+                # RB EDIT: Added normalize paths for URLs (GitHub expects forward slashes)
+                targetfile_url = targetfile.replace("\\", "/")
+                targetpack_url = targetpack.replace("\\", "/")
+
+                # RB EDIT: Use normalized paths for URLs (GitHub expects forward slashes)
                 # GitHub raw URL for the .wpth file
-                url_file = f'https://github.com/{owner}/{repo_name}/blob/main/{targetfile}?raw=true'
+                url_file = f'https://github.com/{owner}/{repo_name}/blob/main/{targetfile_url}?raw=true'
                 # GitHub raw URL for the .wptp file (if exists)
-                url_pack = f'https://github.com/{owner}/{repo_name}/blob/main/{targetpack}?raw=true' if os.path.exists(targetpack) else ''
+                url_pack = (
+                    f'https://github.com/{owner}/{repo_name}/blob/main/{targetpack_url}?raw=true'
+                    if os.path.exists(targetpack) else ''
+                )
 
                 # Build a string with the required information: MD5 hashes and URLs
                 path_info = f"{md5_file}|{md5_pack}|{url_file}"
